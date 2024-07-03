@@ -1,5 +1,6 @@
 import { ThemeProvider } from "@/components/theme-provider";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
+import Home from "./pages/home";
 
 function App() {
   return (
@@ -7,7 +8,7 @@ function App() {
       <ThemeProvider>
         <BrowserRouter>
           <Routes>
-            <Route path="/" element={<></>} />
+            <Route path="/" element={<Home />} />
           </Routes>
         </BrowserRouter>
       </ThemeProvider>
