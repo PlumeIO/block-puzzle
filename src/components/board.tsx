@@ -30,7 +30,7 @@ const Board = React.forwardRef<HTMLDivElement, BoardProps>(
         {Array.from({ length: rows }, (_, rowIndex) => (
           <div key={rowIndex} className="flex">
             {Array.from({ length: columns }, (_, colIndex) => (
-              <Cell key={colIndex} size={cellSize} />
+              <Cell key={colIndex} size={cellSize} variant={"empty"} />
             ))}
           </div>
         ))}
