@@ -8,7 +8,7 @@ const cellVariants = cva("border-4 border-ring", {
       solid: "",
       highlight: "opacity-40 brightness-125",
       empty: "!bg-transparent border-border",
-      hidden: "hidden",
+      hidden: "invisible",
     },
   },
   defaultVariants: {
