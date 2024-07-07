@@ -2,7 +2,7 @@ import { cn } from "@/lib/utils";
 import { VariantProps, cva } from "class-variance-authority";
 import { HTMLAttributes, forwardRef } from "react";
 
-const cellVariants = cva("border-4 border-ring", {
+const cellVariants = cva("border-ring", {
   variants: {
     variant: {
       solid: "",
@@ -33,6 +33,7 @@ const Cell = forwardRef<HTMLDivElement, CellProps>(
           backgroundColor: color,
           width: `${size}px`,
           height: `${size}px`,
+          borderWidth: `${size / 8}px`,
         }}
         {...props}
       />
