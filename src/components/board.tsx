@@ -1,20 +1,21 @@
 import { cn } from "@/lib/utils";
 import React, { useEffect, useRef, useState } from "react";
-import Cell from "./cell";
+import Cell, { CellProps } from "./cell";
 
 export interface BoardProps extends React.HTMLAttributes<HTMLDivElement> {
-  rows: number;
-  columns: number;
+  grid: Omit<CellProps, "size">[][];
 }
 
 const Board = React.forwardRef<HTMLDivElement, BoardProps>(
-  ({ className, rows, columns, ...props }, ref) => {
+  ({ className, grid, ...props }, _ref) => {
     const boardRef = useRef<HTMLDivElement>(null);
     const [cellSize, setCellSize] = useState(0);
 
     useEffect(() => {
       if (!boardRef.current) return;
       const { width, height } = boardRef.current?.getBoundingClientRect();
+      const rows = grid.length;
+      const columns = grid[0].length;
       setCellSize(Math.min(width, height) / Math.max(rows, columns));
     }, []);
 
@@ -27,10 +28,10 @@ const Board = React.forwardRef<HTMLDivElement, BoardProps>(
         ref={boardRef}
         {...props}
       >
-        {Array.from({ length: rows }, (_, rowIndex) => (
+        {grid.map((row, rowIndex) => (
           <div key={rowIndex} className="flex">
-            {Array.from({ length: columns }, (_, colIndex) => (
-              <Cell key={colIndex} size={cellSize} variant={"empty"} />
+            {row.map((cell, colIndex) => (
+              <Cell key={colIndex} size={cellSize} {...cell} />
             ))}
           </div>
         ))}
