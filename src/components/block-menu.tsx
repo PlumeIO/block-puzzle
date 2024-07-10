@@ -1,22 +1,27 @@
 import { cn } from "@/lib/utils";
-import React, { useEffect, useState } from "react";
-import Block from "./block";
+import React, { HTMLAttributes, TouchEvent, useEffect, useState } from "react";
+import Block, { BlockProps } from "./block";
 
-export interface BlockMenuProps extends React.HTMLAttributes<HTMLDivElement> {
-  blocks: {
-    grid: Array<0 | 1>[];
-    color: string;
-  }[];
+export type BlockMenuBlockType = Omit<BlockProps, "cellSize">;
+
+export interface BlockMenuProps extends HTMLAttributes<HTMLDivElement> {
+  blocks: BlockMenuBlockType[];
   hoverSize?: number;
+  onBlockDrop?: (
+    e: TouchEvent<HTMLDivElement>,
+    block: BlockMenuBlockType
+  ) => void;
 }
 
-type BlockType = BlockMenuProps["blocks"][number];
-interface DraggedBlock extends BlockType {
+interface DraggedBlock extends Omit<BlockMenuBlockType, "id"> {
   id: number;
 }
 
 const BlockMenu = React.forwardRef<HTMLDivElement, BlockMenuProps>(
-  ({ className, blocks, hoverSize = 48, ...props }, ref) => {
+  (
+    { className, blocks, hoverSize = 48, onBlockDrop = () => {}, ...props },
+    ref
+  ) => {
     const [draggedBlock, setDraggedBlock] = useState<DraggedBlock | undefined>(
       undefined
     );
@@ -25,24 +30,12 @@ const BlockMenu = React.forwardRef<HTMLDivElement, BlockMenuProps>(
       undefined
     );
 
-    useEffect(() => {
-      const handleTouchMove = (e: TouchEvent) => {
-        setDragPos([e.touches[0].clientX, e.touches[0].clientY]);
-      };
-
-      document.addEventListener("touchmove", handleTouchMove);
-
-      return () => {
-        document.removeEventListener("touchmove", handleTouchMove);
-      };
-    });
-
     return (
       <>
         <div
           className={cn(
             className,
-            "w-full flex items-center justify-evenly h-20 bg-secondary rounded-md"
+            "w-full flex items-center justify-evenly min-h-20 bg-secondary rounded-md"
           )}
           ref={ref}
           {...props}
@@ -54,9 +47,13 @@ const BlockMenu = React.forwardRef<HTMLDivElement, BlockMenuProps>(
                 setDraggedBlock({ ...block, id: i });
                 setDragPos([e.touches[0].clientX, e.touches[0].clientY]);
               }}
-              onTouchEnd={() => {
+              onTouchMove={(e) => {
+                setDragPos([e.touches[0].clientX, e.touches[0].clientY]);
+              }}
+              onTouchEnd={(e) => {
                 setDraggedBlock(undefined);
                 setDragPos(undefined);
+                onBlockDrop(e, block);
               }}
               key={i}
             >
