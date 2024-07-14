@@ -10,7 +10,7 @@ const ScoreBoard = React.forwardRef<HTMLDivElement, ScoreBoardProps>(
   ({ className, highScore, score, ...props }, ref) => {
     return (
       <div
-        className={cn(className, "w-full flex items-center gap-4")}
+        className={cn(className, "w-full flex items-center gap-2")}
         ref={ref}
         {...props}
       >

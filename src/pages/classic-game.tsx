@@ -4,6 +4,7 @@ import BlockMenu, {
 } from "@/components/block-menu";
 import Board, { BoardProps } from "@/components/board";
 import { CellProps } from "@/components/cell";
+import PauseButton from "@/components/pause-button";
 import ScoreBoard from "@/components/score-board";
 import boardController from "@/controllers/board.controller";
 import { TouchEvent, useEffect, useRef, useState } from "react";
@@ -90,7 +91,10 @@ function ClassicGame() {
 
   return (
     <main className="page">
-      <ScoreBoard score={0} highScore={0} />
+      <div className="flex gap-4">
+        <ScoreBoard score={0} highScore={0} />
+        <PauseButton />
+      </div>
       <Board grid={grid} cellSize={cellSize} ref={boardRef} />
       <BlockMenu
         blocks={blockMenuBlocks}

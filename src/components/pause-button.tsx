@@ -12,15 +12,11 @@ import {
 import { Button } from "./ui/button";
 import { Link } from "react-router-dom";
 
-function MenuButton() {
+function PauseButton() {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button
-          className="fixed top-4 right-4"
-          variant={"outline"}
-          size={"icon-lg"}
-        >
+        <Button className="rounded-md" variant={"outline"} size={"icon-lg"}>
           <Pause />
         </Button>
       </AlertDialogTrigger>
@@ -44,4 +40,4 @@ function MenuButton() {
   );
 }
 
-export default MenuButton;
+export default PauseButton;
