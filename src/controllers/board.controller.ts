@@ -18,8 +18,8 @@ const addBlock = (
       const blockCell = blockGrid[i - rowIndex][j - colIndex];
       const blockCellIsEmpty = blockCell === 0;
 
-      const gridCell = grid[i][j];
-      const gridCellIsEmpty = gridCell.variant === "empty";
+      const gridCell = grid[i] && grid[i][j];
+      const gridCellIsEmpty = gridCell?.variant === "empty";
 
       if (!blockCellIsEmpty) {
         if (gridCellIsEmpty) {
@@ -37,6 +37,25 @@ const addBlock = (
   else return grid;
 };
 
+const clearHighlight = (grid: BoardProps["grid"]) => {
+  const newGrid = JSON.parse(JSON.stringify(grid));
+
+  for (let i = 0; i < grid.length; i++) {
+    for (let j = 0; j < grid[i].length; j++) {
+      const gridCell = grid[i][j];
+      const gridCellIsHighlighted = gridCell.variant === "highlight";
+
+      if (gridCellIsHighlighted) {
+        newGrid[i][j].variant = "empty";
+        newGrid[i][j].color = "";
+      }
+    }
+  }
+
+  return newGrid;
+};
+
 export default {
   addBlock,
+  clearHighlight,
 };

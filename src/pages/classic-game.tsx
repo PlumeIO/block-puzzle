@@ -3,6 +3,7 @@ import BlockMenu, {
   BlockMenuProps,
 } from "@/components/block-menu";
 import Board, { BoardProps } from "@/components/board";
+import { CellProps } from "@/components/cell";
 import ScoreBoard from "@/components/score-board";
 import boardController from "@/controllers/board.controller";
 import { TouchEvent, useEffect, useRef, useState } from "react";
@@ -45,14 +46,23 @@ function ClassicGame() {
 
   function onBlockDrop(
     event: TouchEvent<HTMLDivElement>,
-    block: BlockMenuBlockType
+    block: BlockMenuBlockType,
+    variant: CellProps["variant"] = "solid"
   ) {
-    const selectedCell = document.elementFromPoint(
-      event.changedTouches[0].clientX -
-        (block.grid[0].length / 2) * cellSize -
-        5,
-      event.changedTouches[0].clientY - (block.grid.length / 2) * cellSize - 5
-    );
+    const selectedCell = document
+      .elementsFromPoint(
+        event.changedTouches[0].clientX -
+          (block.grid[0].length / 2) * cellSize +
+          cellSize / 2,
+        event.changedTouches[0].clientY -
+          (block.grid.length / 2) * cellSize +
+          cellSize / 2
+      )
+      .find((ele) => ele?.id.includes("cell")) as HTMLDivElement;
+
+    const gridWithoutHighlight = boardController.clearHighlight(grid);
+    setGrid(gridWithoutHighlight);
+
     if (selectedCell?.id.includes("cell")) {
       const selectedCellPos = selectedCell.id
         .replace("cell-", "")
@@ -61,14 +71,21 @@ function ClassicGame() {
 
       setGrid(
         boardController.addBlock(
-          grid,
+          gridWithoutHighlight,
           selectedCellPos,
-          "solid",
+          variant,
           block.color,
           block.grid
         )
       );
     }
+  }
+
+  function onBlockDrag(
+    event: TouchEvent<HTMLDivElement>,
+    block: BlockMenuBlockType
+  ) {
+    onBlockDrop(event, block, "highlight");
   }
 
   return (
@@ -79,6 +96,7 @@ function ClassicGame() {
         blocks={blockMenuBlocks}
         hoverSize={cellSize}
         onBlockDrop={onBlockDrop}
+        onBlockDrag={onBlockDrag}
       />
     </main>
   );

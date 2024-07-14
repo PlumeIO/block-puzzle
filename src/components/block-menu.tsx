@@ -11,6 +11,10 @@ export interface BlockMenuProps extends HTMLAttributes<HTMLDivElement> {
     e: TouchEvent<HTMLDivElement>,
     block: BlockMenuBlockType
   ) => void;
+  onBlockDrag?: (
+    e: TouchEvent<HTMLDivElement>,
+    block: BlockMenuBlockType
+  ) => void;
 }
 
 interface DraggedBlock extends Omit<BlockMenuBlockType, "id"> {
@@ -19,7 +23,14 @@ interface DraggedBlock extends Omit<BlockMenuBlockType, "id"> {
 
 const BlockMenu = React.forwardRef<HTMLDivElement, BlockMenuProps>(
   (
-    { className, blocks, hoverSize = 48, onBlockDrop = () => {}, ...props },
+    {
+      className,
+      blocks,
+      hoverSize = 48,
+      onBlockDrop = () => {},
+      onBlockDrag = () => {},
+      ...props
+    },
     ref
   ) => {
     const [draggedBlock, setDraggedBlock] = useState<DraggedBlock | undefined>(
@@ -46,9 +57,11 @@ const BlockMenu = React.forwardRef<HTMLDivElement, BlockMenuProps>(
               onTouchStart={(e) => {
                 setDraggedBlock({ ...block, id: i });
                 setDragPos([e.touches[0].clientX, e.touches[0].clientY]);
+                onBlockDrag(e, block);
               }}
               onTouchMove={(e) => {
                 setDragPos([e.touches[0].clientX, e.touches[0].clientY]);
+                onBlockDrag(e, block);
               }}
               onTouchEnd={(e) => {
                 setDraggedBlock(undefined);
