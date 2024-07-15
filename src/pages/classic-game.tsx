@@ -10,15 +10,17 @@ import boardController from "@/controllers/board.controller";
 import { TouchEvent, useEffect, useRef, useState } from "react";
 
 function ClassicGame() {
-  const [cellSize, setCellSize] = useState(0);
-  const boardRef = useRef<HTMLDivElement>(null);
+  const [cellSize, setCellSize] = useState(0); // State to hold the size of each cell
+  const boardRef = useRef<HTMLDivElement>(null); // Reference to the board element
 
+  // State to hold the grid data
   const [grid, setGrid] = useState<BoardProps["grid"]>(
-    Array.from({ length: 9 }, (_) =>
-      Array.from({ length: 9 }, (_) => ({ variant: "empty" }))
+    Array.from({ length: 9 }, () =>
+      Array.from({ length: 9 }, () => ({ variant: "empty" }))
     )
   );
 
+  // State to hold the blocks data for the block menu
   const [blockMenuBlocks, setBlockMenuBlocks] = useState<
     BlockMenuProps["blocks"]
   >([
@@ -37,19 +39,19 @@ function ClassicGame() {
     },
   ]);
 
+  // Effect to set the cell size based on the board dimensions
   useEffect(() => {
     if (!boardRef.current) return;
-    const { width, height } = boardRef.current?.getBoundingClientRect();
+    const { width, height } = boardRef.current.getBoundingClientRect();
     const rows = grid.length;
     const columns = grid[0].length;
     setCellSize(Math.min(width, height) / Math.max(rows, columns));
   }, []);
 
-  function onBlockDrop(
+  function getSelectedCell(
     event: TouchEvent<HTMLDivElement>,
-    block: BlockMenuBlockType,
-    variant: CellProps["variant"] = "solid"
-  ) {
+    block: BlockMenuBlockType
+  ): HTMLDivElement | null {
     const selectedCell = document
       .elementsFromPoint(
         event.changedTouches[0].clientX -
@@ -60,33 +62,59 @@ function ClassicGame() {
           cellSize / 2
       )
       .find((ele) => ele?.id.includes("cell")) as HTMLDivElement;
+    return selectedCell;
+  }
 
+  function getSelectedCellPosition(
+    selectedCell: HTMLDivElement
+  ): [number, number] {
+    return selectedCell.id.replace("cell-", "").split("x").map(Number) as [
+      number,
+      number
+    ];
+  }
+
+  function updateGridWithBlock(
+    selectedCellPos: [number, number],
+    block: BlockMenuBlockType,
+    variant: CellProps["variant"]
+  ) {
     const gridWithoutHighlight = boardController.clearHighlight(grid);
-    setGrid(gridWithoutHighlight);
+    setGrid(
+      boardController.addBlock(
+        gridWithoutHighlight,
+        selectedCellPos,
+        variant,
+        block.color,
+        block.grid
+      )
+    );
+  }
 
+  // Handle block drop event
+  function onBlockDrop(
+    event: TouchEvent<HTMLDivElement>,
+    block: BlockMenuBlockType
+  ) {
+    const selectedCell = getSelectedCell(event, block);
     if (selectedCell?.id.includes("cell")) {
-      const selectedCellPos = selectedCell.id
-        .replace("cell-", "")
-        .split("x")
-        .map((ele) => Number(ele)) as [number, number];
-
-      setGrid(
-        boardController.addBlock(
-          gridWithoutHighlight,
-          selectedCellPos,
-          variant,
-          block.color,
-          block.grid
-        )
-      );
+      const selectedCellPos = getSelectedCellPosition(selectedCell);
+      updateGridWithBlock(selectedCellPos, block, "solid");
     }
   }
 
+  // Handle block drag event
   function onBlockDrag(
     event: TouchEvent<HTMLDivElement>,
     block: BlockMenuBlockType
   ) {
-    onBlockDrop(event, block, "highlight");
+    const selectedCell = getSelectedCell(event, block);
+    if (selectedCell?.id.includes("cell")) {
+      const selectedCellPos = getSelectedCellPosition(selectedCell);
+      updateGridWithBlock(selectedCellPos, block, "highlight");
+    } else {
+      setGrid(boardController.clearHighlight(grid));
+    }
   }
 
   return (
