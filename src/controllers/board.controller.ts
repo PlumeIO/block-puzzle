@@ -34,7 +34,7 @@ const addBlock = (
   }
 
   if (isBlockPlaceable) return newGrid;
-  else return grid;
+  else return undefined;
 };
 
 const clearHighlight = (grid: BoardProps["grid"]) => {

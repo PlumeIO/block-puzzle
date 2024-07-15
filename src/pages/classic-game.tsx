@@ -7,6 +7,7 @@ import { CellProps } from "@/components/cell";
 import PauseButton from "@/components/pause-button";
 import ScoreBoard from "@/components/score-board";
 import boardController from "@/controllers/board.controller";
+import blockPresets from "@/lib/block-presets";
 import { TouchEvent, useEffect, useRef, useState } from "react";
 
 function ClassicGame() {
@@ -24,19 +25,9 @@ function ClassicGame() {
   const [blockMenuBlocks, setBlockMenuBlocks] = useState<
     BlockMenuProps["blocks"]
   >([
-    { grid: [[1, 1, 1, 1, 1]], color: "red" },
-    {
-      grid: [
-        [1, 1, 1],
-        [1, 1, 1],
-        [1, 1, 1],
-      ],
-      color: "blue",
-    },
-    {
-      grid: [[1], [1], [1], [1], [1]],
-      color: "yellow",
-    },
+    blockPresets.randomBlock(),
+    blockPresets.randomBlock(),
+    blockPresets.randomBlock(),
   ]);
 
   // Effect to set the cell size based on the board dimensions
@@ -80,15 +71,19 @@ function ClassicGame() {
     variant: CellProps["variant"]
   ) {
     const gridWithoutHighlight = boardController.clearHighlight(grid);
-    setGrid(
-      boardController.addBlock(
-        gridWithoutHighlight,
-        selectedCellPos,
-        variant,
-        block.color,
-        block.grid
-      )
+    const newGrid = boardController.addBlock(
+      gridWithoutHighlight,
+      selectedCellPos,
+      variant,
+      block.color,
+      block.grid
     );
+
+    if (newGrid) {
+      setGrid(newGrid);
+    }
+
+    return newGrid;
   }
 
   // Handle block drop event
@@ -99,7 +94,14 @@ function ClassicGame() {
     const selectedCell = getSelectedCell(event, block);
     if (selectedCell?.id.includes("cell")) {
       const selectedCellPos = getSelectedCellPosition(selectedCell);
-      updateGridWithBlock(selectedCellPos, block, "solid");
+      const newGrid = updateGridWithBlock(selectedCellPos, block, "solid");
+
+      if (newGrid) {
+        const blockId = blockMenuBlocks.indexOf(block);
+        const newBlockMenuBlocks = JSON.parse(JSON.stringify(blockMenuBlocks));
+        newBlockMenuBlocks[blockId] = blockPresets.randomBlock();
+        setBlockMenuBlocks(newBlockMenuBlocks);
+      }
     }
   }
 
