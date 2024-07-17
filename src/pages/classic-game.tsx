@@ -79,11 +79,17 @@ function ClassicGame() {
       block.grid
     );
 
-    if (newGrid) {
-      setGrid(newGrid);
-    }
-
     return newGrid;
+  }
+
+  function replaceBlockInBlockMenu(
+    block: BlockMenuBlockType,
+    newBlock: BlockMenuBlockType
+  ) {
+    const blockId = blockMenuBlocks.indexOf(block);
+    const newBlockMenuBlocks = JSON.parse(JSON.stringify(blockMenuBlocks));
+    newBlockMenuBlocks[blockId] = newBlock;
+    setBlockMenuBlocks(newBlockMenuBlocks);
   }
 
   // Handle block drop event
@@ -97,10 +103,16 @@ function ClassicGame() {
       const newGrid = updateGridWithBlock(selectedCellPos, block, "solid");
 
       if (newGrid) {
-        const blockId = blockMenuBlocks.indexOf(block);
-        const newBlockMenuBlocks = JSON.parse(JSON.stringify(blockMenuBlocks));
-        newBlockMenuBlocks[blockId] = blockPresets.randomBlock();
-        setBlockMenuBlocks(newBlockMenuBlocks);
+        replaceBlockInBlockMenu(block, blockPresets.randomBlock());
+        const clearedRowGrid =
+          boardController.clearFilledRows(newGrid) ?? newGrid;
+
+        const clearedGrid =
+          boardController.clearFilledColumns(clearedRowGrid) ?? clearedRowGrid;
+
+        console.log(clearedGrid);
+
+        setGrid(clearedGrid);
       }
     }
   }

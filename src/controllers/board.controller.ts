@@ -55,7 +55,56 @@ const clearHighlight = (grid: BoardProps["grid"]) => {
   return newGrid;
 };
 
+const clearFilledRows = (grid: BoardProps["grid"]) => {
+  const newGrid = grid.map((row) => row.map((cell) => ({ ...cell })));
+  let isModified = false;
+
+  for (let i = 0; i < grid.length; i++) {
+    if (grid[i].every((cell) => cell.variant === "solid")) {
+      newGrid[i].forEach((cell) => {
+        cell.variant = "empty";
+        cell.color = "";
+      });
+      isModified = true;
+    }
+  }
+
+  return isModified ? newGrid : undefined;
+};
+
+const clearFilledColumns = (grid: BoardProps["grid"]) => {
+  const newGrid = grid.map(row => row.map(cell => ({ ...cell })));
+  let isModified = false;
+
+  const numRows = grid.length;
+  const numCols = grid[0].length;
+
+  for (let col = 0; col < numCols; col++) {
+    let isColumnFilled = true;
+
+    for (let row = 0; row < numRows; row++) {
+      if (grid[row][col].variant !== "solid") {
+        isColumnFilled = false;
+        break;
+      }
+    }
+
+    if (isColumnFilled) {
+      for (let row = 0; row < numRows; row++) {
+        newGrid[row][col].variant = "empty";
+        newGrid[row][col].color = "";
+      }
+      isModified = true;
+    }
+  }
+
+  return isModified ? newGrid : undefined;
+};
+
+
 export default {
   addBlock,
   clearHighlight,
+  clearFilledRows,
+  clearFilledColumns,
 };
