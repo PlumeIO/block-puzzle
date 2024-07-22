@@ -73,7 +73,7 @@ const clearFilledRows = (grid: BoardProps["grid"]) => {
 };
 
 const clearFilledColumns = (grid: BoardProps["grid"]) => {
-  const newGrid = grid.map(row => row.map(cell => ({ ...cell })));
+  const newGrid = grid.map((row) => row.map((cell) => ({ ...cell })));
   let isModified = false;
 
   const numRows = grid.length;
@@ -101,10 +101,43 @@ const clearFilledColumns = (grid: BoardProps["grid"]) => {
   return isModified ? newGrid : undefined;
 };
 
+const compare = (oldGrid: BoardProps["grid"], newGrid: BoardProps["grid"]) => {
+  const clearedRows = [];
+  const clearedColumns = [];
+
+  for (let row = 0; row < oldGrid.length; row++) {
+    if (
+      oldGrid[row].every((cell) => cell.variant === "solid") &&
+      newGrid[row].every((cell) => cell.variant === "empty")
+    ) {
+      clearedRows.push(row);
+    }
+  }
+
+  for (let col = 0; col < oldGrid[0].length; col++) {
+    let isColumnCleared = true;
+
+    for (let row = 0; row < oldGrid.length && isColumnCleared; row++) {
+      isColumnCleared =
+        oldGrid[row][col].variant === "solid" &&
+        newGrid[row][col].variant === "empty";
+    }
+
+    if (isColumnCleared) {
+      clearedColumns.push(col);
+    }
+  }
+
+  return {
+    clearedRows,
+    clearedColumns,
+  };
+};
 
 export default {
   addBlock,
   clearHighlight,
   clearFilledRows,
   clearFilledColumns,
+  compare,
 };

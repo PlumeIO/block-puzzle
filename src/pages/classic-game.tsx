@@ -11,6 +11,7 @@ import blockPresets from "@/lib/block-presets";
 import { TouchEvent, useEffect, useRef, useState } from "react";
 
 function ClassicGame() {
+  const [score, setScore] = useState(0);
   const [cellSize, setCellSize] = useState(0); // State to hold the size of each cell
   const boardRef = useRef<HTMLDivElement>(null); // Reference to the board element
 
@@ -110,7 +111,20 @@ function ClassicGame() {
         const clearedGrid =
           boardController.clearFilledColumns(clearedRowGrid) ?? clearedRowGrid;
 
-        console.log(clearedGrid);
+        if (clearedGrid !== newGrid) {
+          const { clearedRows, clearedColumns } = boardController.compare(
+            newGrid,
+            clearedGrid
+          );
+          const newScore =
+            score +
+            clearedRows.length * 100 +
+            clearedColumns.length * 100 +
+            Math.floor(clearedRows.length / 2) * 200 +
+            Math.floor(clearedColumns.length / 2) * 200;
+
+          setScore(newScore);
+        }
 
         setGrid(clearedGrid);
       }
@@ -134,7 +148,7 @@ function ClassicGame() {
   return (
     <main className="page">
       <div className="flex gap-4">
-        <ScoreBoard score={0} highScore={0} />
+        <ScoreBoard score={score} highScore={score} />
         <PauseButton />
       </div>
       <Board grid={grid} cellSize={cellSize} ref={boardRef} />
