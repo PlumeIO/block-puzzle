@@ -4,6 +4,7 @@ import BlockMenu, {
 } from "@/components/block-menu";
 import Board, { BoardProps } from "@/components/board";
 import { CellProps } from "@/components/cell";
+import EndMenu from "@/components/end-menu";
 import PauseButton from "@/components/pause-button";
 import ScoreBoard from "@/components/score-board";
 import boardController from "@/controllers/board.controller";
@@ -12,8 +13,12 @@ import { TouchEvent, useEffect, useRef, useState } from "react";
 
 function ClassicGame() {
   const [score, setScore] = useState(0);
+  const [highScore, setHighScore] = useState(
+    Number(localStorage.getItem("HIGH-SCORE")) ?? 0
+  );
   const [cellSize, setCellSize] = useState(0); // State to hold the size of each cell
   const boardRef = useRef<HTMLDivElement>(null); // Reference to the board element
+  const endGameButton = useRef<HTMLButtonElement>(null);
 
   // State to hold the grid data
   const [grid, setGrid] = useState<BoardProps["grid"]>(
@@ -91,6 +96,7 @@ function ClassicGame() {
     const newBlockMenuBlocks = JSON.parse(JSON.stringify(blockMenuBlocks));
     newBlockMenuBlocks[blockId] = newBlock;
     setBlockMenuBlocks(newBlockMenuBlocks);
+    return newBlockMenuBlocks;
   }
 
   // Handle block drop event
@@ -104,12 +110,21 @@ function ClassicGame() {
       const newGrid = updateGridWithBlock(selectedCellPos, block, "solid");
 
       if (newGrid) {
-        replaceBlockInBlockMenu(block, blockPresets.randomBlock());
+        const newBlockMenuBlocks = replaceBlockInBlockMenu(
+          block,
+          blockPresets.randomBlock()
+        );
+
         const clearedRowGrid =
           boardController.clearFilledRows(newGrid) ?? newGrid;
 
-        const clearedGrid =
-          boardController.clearFilledColumns(clearedRowGrid) ?? clearedRowGrid;
+        const clearedColumnGrid =
+          boardController.clearFilledColumns(newGrid) ?? newGrid;
+
+        const clearedGrid = boardController.combine(
+          clearedRowGrid,
+          clearedColumnGrid
+        );
 
         if (clearedGrid !== newGrid) {
           const { clearedRows, clearedColumns } = boardController.compare(
@@ -127,6 +142,17 @@ function ClassicGame() {
         }
 
         setGrid(clearedGrid);
+        const isGamePlayable = boardController.isGamePlayable(
+          clearedGrid,
+          newBlockMenuBlocks
+        );
+        if (!isGamePlayable) {
+          endGameButton.current?.click();
+          if (score > highScore) {
+            localStorage.setItem("HIGH-SCORE", String(score));
+            setHighScore(score);
+          }
+        }
       }
     }
   }
@@ -148,7 +174,7 @@ function ClassicGame() {
   return (
     <main className="page">
       <div className="flex gap-4">
-        <ScoreBoard score={score} highScore={score} />
+        <ScoreBoard score={score} highScore={highScore} />
         <PauseButton />
       </div>
       <Board grid={grid} cellSize={cellSize} ref={boardRef} />
@@ -158,6 +184,7 @@ function ClassicGame() {
         onBlockDrop={onBlockDrop}
         onBlockDrag={onBlockDrag}
       />
+      <EndMenu ref={endGameButton} />
     </main>
   );
 }

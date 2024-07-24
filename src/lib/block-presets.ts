@@ -4,6 +4,10 @@ const blockPresets: {
   colors: BlockMenuProps["color"][];
   grids: BlockMenuProps["blocks"][number]["grid"][];
   randomBlock: () => BlockMenuProps["blocks"][number];
+  blockFromGridId: (
+    gridId: number,
+    color?: string
+  ) => BlockMenuProps["blocks"][number];
 } = {
   grids: [
     [[1]],
@@ -180,6 +184,16 @@ const blockPresets: {
     return {
       color: this.colors[Math.floor(Math.random() * this.colors.length)] ?? "",
       grid: this.grids[Math.floor(Math.random() * this.grids.length)],
+    };
+  },
+
+  blockFromGridId(gridId: number, color: string | undefined = undefined) {
+    return {
+      color:
+        color ??
+        this.colors[Math.floor(Math.random() * this.colors.length)] ??
+        "",
+      grid: this.grids[gridId],
     };
   },
 };

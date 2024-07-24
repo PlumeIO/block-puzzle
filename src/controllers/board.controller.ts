@@ -1,4 +1,5 @@
 import { BlockProps } from "@/components/block";
+import { BlockMenuProps } from "@/components/block-menu";
 import { BoardProps } from "@/components/board";
 import { CellProps } from "@/components/cell";
 
@@ -134,10 +135,71 @@ const compare = (oldGrid: BoardProps["grid"], newGrid: BoardProps["grid"]) => {
   };
 };
 
+const isGamePlayable = (
+  grid: BoardProps["grid"],
+  blockMenuBlocks: BlockMenuProps["blocks"]
+) => {
+  const numRows = grid.length;
+  const numCols = grid[0].length;
+
+  const canPlaceBlock = (
+    grid: BoardProps["grid"],
+    block: BlockMenuProps["blocks"][number],
+    startRow: number,
+    startCol: number
+  ) => {
+    const blockRows = block.grid.length;
+    const blockCols = block.grid[0].length;
+
+    if (startRow + blockRows > numRows || startCol + blockCols > numCols) {
+      return false;
+    }
+
+    for (let i = 0; i < blockRows; i++) {
+      for (let j = 0; j < blockCols; j++) {
+        if (
+          block.grid[i][j] === 1 &&
+          grid[startRow + i][startCol + j].variant === "solid"
+        ) {
+          return false;
+        }
+      }
+    }
+
+    return true;
+  };
+
+  for (const block of blockMenuBlocks) {
+    for (let row = 0; row < numRows; row++) {
+      for (let col = 0; col < numCols; col++) {
+        if (canPlaceBlock(grid, block, row, col)) {
+          return true;
+        }
+      }
+    }
+  }
+
+  return false;
+};
+
+const combine = (grid_1: BoardProps["grid"], grid_2: BoardProps["grid"]) => {
+  for (let i = 0; i < grid_1.length; i++) {
+    for (let j = 0; j < grid_1[i].length; j++) {
+      if (grid_2[i][j].variant === "empty") {
+        grid_1[i][j] = { ...grid_2[i][j] };
+      }
+    }
+  }
+
+  return grid_1;
+};
+
 export default {
   addBlock,
   clearHighlight,
   clearFilledRows,
   clearFilledColumns,
   compare,
+  isGamePlayable,
+  combine,
 };
