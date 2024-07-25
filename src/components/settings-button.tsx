@@ -25,7 +25,7 @@ function SettingButton() {
           <Settings />
         </Button>
       </AlertDialogTrigger>
-      <AlertDialogContent className="max-w-[90vw] rounded-md">
+      <AlertDialogContent className="max-md:max-w-[90vw] rounded-md">
         <AlertDialogHeader>
           <AlertDialogTitle>Settings</AlertDialogTitle>
           <AlertDialogDescription className="hidden">
