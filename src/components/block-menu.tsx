@@ -2,8 +2,10 @@ import { cn } from "@/lib/utils";
 import React, { HTMLAttributes, TouchEvent, useEffect, useState } from "react";
 import Block, { BlockProps } from "./block";
 
+// Define the type for the blocks used in the BlockMenu
 export type BlockMenuBlockType = Omit<BlockProps, "cellSize">;
 
+// Define the props for the BlockMenu component
 export interface BlockMenuProps extends HTMLAttributes<HTMLDivElement> {
   blocks: BlockMenuBlockType[];
   hoverSize?: number;
@@ -17,10 +19,12 @@ export interface BlockMenuProps extends HTMLAttributes<HTMLDivElement> {
   ) => void;
 }
 
+// Define the type for the dragged block, excluding the id
 interface DraggedBlock extends Omit<BlockMenuBlockType, "id"> {
   id: number;
 }
 
+// Define the BlockMenu component
 const BlockMenu = React.forwardRef<HTMLDivElement, BlockMenuProps>(
   (
     {
@@ -36,7 +40,6 @@ const BlockMenu = React.forwardRef<HTMLDivElement, BlockMenuProps>(
     const [draggedBlock, setDraggedBlock] = useState<DraggedBlock | undefined>(
       undefined
     );
-
     const [dragPos, setDragPos] = useState<[number, number] | undefined>(
       undefined
     );

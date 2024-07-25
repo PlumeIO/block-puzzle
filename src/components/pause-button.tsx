@@ -11,6 +11,7 @@ import {
 } from "./ui/alert-dialog";
 import { Button } from "./ui/button";
 import { Link } from "react-router-dom";
+import { ResetIcon } from "@radix-ui/react-icons";
 
 function PauseButton() {
   return (
@@ -28,10 +29,19 @@ function PauseButton() {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <Link to={"/"} className="w-full">
-          <Button className="w-full">
-            <Home /> | Go back home
+          <Button className="w-full flex justify-center gap-2">
+            <Home size={16} />{" "}
+            <span className="translate-y-[1px]">Go back home</span>
           </Button>
         </Link>
+        <Button
+          className="w-full flex justify-center gap-2"
+          onClick={() => {
+            window.location.reload();
+          }}
+        >
+          <ResetIcon /> <span className="translate-y-[1px]">Restart</span>
+        </Button>
         <AlertDialogFooter>
           <AlertDialogCancel>Close</AlertDialogCancel>
         </AlertDialogFooter>
