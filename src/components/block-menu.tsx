@@ -1,5 +1,5 @@
 import { cn } from "@/lib/utils";
-import React, { HTMLAttributes, TouchEvent, useEffect, useState } from "react";
+import React, { HTMLAttributes, TouchEvent, useState } from "react";
 import Block, { BlockProps } from "./block";
 
 // Define the type for the blocks used in the BlockMenu
@@ -88,7 +88,7 @@ const BlockMenu = React.forwardRef<HTMLDivElement, BlockMenuProps>(
               left: dragPos[0] + "px",
               top: dragPos[1] + "px",
             }}
-            className="fixed -translate-x-1/2 -translate-y-1/2"
+            className="fixed -translate-x-[50%] -translate-y-[12rem]"
             {...draggedBlock}
             id={"block-menu-#" + draggedBlock.id}
           />

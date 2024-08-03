@@ -48,13 +48,12 @@ function ClassicGame() {
     block: BlockMenuBlockType
   ): HTMLDivElement | null => {
     const { clientX, clientY } = event.changedTouches[0];
-    const { length: blockRows } = block.grid;
     const { length: blockColumns } = block.grid[0];
 
     return document
       .elementsFromPoint(
-        clientX - (blockColumns / 2) * cellSize + cellSize / 2,
-        clientY - (blockRows / 2) * cellSize + cellSize / 2
+        clientX - (blockColumns * cellSize) / 2 + cellSize / 2,
+        clientY - 12 * 16 + cellSize / 2
       )
       .find((ele) => ele?.id.includes("cell")) as HTMLDivElement;
   };
@@ -161,7 +160,13 @@ function ClassicGame() {
     const selectedCell = getSelectedCell(event, block);
     if (selectedCell?.id.includes("cell")) {
       const selectedCellPos = getSelectedCellPosition(selectedCell);
-      updateGridWithBlock(selectedCellPos, block, "highlight");
+      const highlistedGrid = updateGridWithBlock(
+        selectedCellPos,
+        block,
+        "highlight"
+      );
+      if (highlistedGrid) setGrid(highlistedGrid);
+      else setGrid(boardController.clearHighlight(grid));
     } else {
       setGrid(boardController.clearHighlight(grid));
     }
