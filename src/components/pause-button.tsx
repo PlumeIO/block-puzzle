@@ -1,4 +1,4 @@
-import { Home, Pause } from "lucide-react";
+import { Home, Pause, RedoIcon } from "lucide-react";
 import {
   AlertDialog,
   AlertDialogCancel,
@@ -11,13 +11,12 @@ import {
 } from "./ui/alert-dialog";
 import { Button } from "./ui/button";
 import { Link } from "react-router-dom";
-import { ResetIcon } from "@radix-ui/react-icons";
 
 function PauseButton() {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>
-        <Button className="rounded-md" variant={"outline"} size={"icon-lg"}>
+        <Button className="rounded-md" variant={"default"} size={"icon-lg"}>
           <Pause />
         </Button>
       </AlertDialogTrigger>
@@ -29,18 +28,22 @@ function PauseButton() {
           </AlertDialogDescription>
         </AlertDialogHeader>
         <Link to={"/"} className="w-full">
-          <Button className="w-full flex justify-center gap-2">
+          <Button
+            className="w-full flex justify-center gap-2"
+            variant={"secondary"}
+          >
             <Home size={16} />{" "}
             <span className="translate-y-[1px]">Go back home</span>
           </Button>
         </Link>
         <Button
           className="w-full flex justify-center gap-2"
+          variant={"secondary"}
           onClick={() => {
             window.location.reload();
           }}
         >
-          <ResetIcon /> <span className="translate-y-[1px]">Restart</span>
+          <RedoIcon /> <span className="translate-y-[1px]">Restart</span>
         </Button>
         <AlertDialogFooter>
           <AlertDialogCancel>Close</AlertDialogCancel>

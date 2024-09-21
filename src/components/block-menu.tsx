@@ -49,7 +49,7 @@ const BlockMenu = React.forwardRef<HTMLDivElement, BlockMenuProps>(
         <div
           className={cn(
             className,
-            "w-full flex items-center justify-evenly min-h-20 bg-secondary rounded-md"
+            "w-full flex items-center justify-evenly min-h-20 bg-accent rounded-md"
           )}
           ref={ref}
           {...props}

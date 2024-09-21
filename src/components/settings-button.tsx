@@ -18,7 +18,7 @@ function SettingButton() {
       <AlertDialogTrigger asChild>
         <Button
           className="fixed bottom-4 right-4"
-          variant={"outline"}
+          variant={"secondary"}
           size={"icon-lg"}
         >
           <Settings />

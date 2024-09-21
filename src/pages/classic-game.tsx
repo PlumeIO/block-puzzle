@@ -98,7 +98,8 @@ function ClassicGame() {
 
   // handle game end event
   const onGameEnd = () => {
-    endGameButtonRef.current?.click();
+    endGameButtonRef.current?.classList.remove("hidden");
+    boardRef.current?.classList.add("board-over");
     if (score > highScore) {
       localStorage.setItem("HIGH-SCORE", String(score));
       setHighScore(score);

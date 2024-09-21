@@ -241,6 +241,17 @@ const isGamePlayable = (
   return false;
 };
 
+const grayscale = (grid: BoardProps["grid"]) => {
+  const newGrid = JSON.parse(JSON.stringify(grid));
+
+  for (let i = 0; i < grid.length; i++) {
+    for (let j = 0; j < grid[i].length; j++) {
+      newGrid[i][j].color = "#eee";
+    }
+  }
+  return newGrid;
+};
+
 export default {
   addBlock,
   clearHighlight,
@@ -249,4 +260,5 @@ export default {
   combine,
   compare,
   isGamePlayable,
+  grayscale,
 };

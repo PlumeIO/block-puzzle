@@ -2,12 +2,12 @@ import { cn } from "@/lib/utils";
 import { VariantProps, cva } from "class-variance-authority";
 import { HTMLAttributes, forwardRef } from "react";
 
-const cellVariants = cva("border-ring", {
+const cellVariants = cva("rounded-[25%]", {
   variants: {
     variant: {
       solid: "",
       highlight: "opacity-40 brightness-125",
-      empty: "!bg-transparent border-border",
+      empty: "bg-transparent",
       hidden: "invisible",
     },
   },
@@ -28,12 +28,13 @@ const Cell = forwardRef<HTMLDivElement, CellProps>(
     return (
       <div
         className={cn(cellVariants({ variant: variant, className }))}
+        data-variant={variant}
         ref={ref}
         style={{
           backgroundColor: color,
           width: `${size}px`,
           height: `${size}px`,
-          borderWidth: `${size / 8}px`,
+          borderWidth: `${size / 20}px`,
         }}
         {...props}
       />

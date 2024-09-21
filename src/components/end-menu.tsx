@@ -1,52 +1,32 @@
-import { GoalIcon, Home } from "lucide-react";
-import {
-  AlertDialog,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogHeader,
-  AlertDialogTitle,
-  AlertDialogTrigger,
-} from "./ui/alert-dialog";
+import { Home, RedoIcon } from "lucide-react";
 import { Button } from "./ui/button";
 import { Link } from "react-router-dom";
-import { ResetIcon } from "@radix-ui/react-icons";
 import React from "react";
 
 const EndMenu = React.forwardRef<HTMLButtonElement>((_, ref) => {
   return (
-    <AlertDialog>
-      <AlertDialogTrigger asChild>
-        <Button
-          className="rounded-md hidden"
-          variant={"outline"}
-          size={"icon-lg"}
-          ref={ref}
-        >
-          <GoalIcon />
-        </Button>
-      </AlertDialogTrigger>
-      <AlertDialogContent className="max-md:max-w-[90vw] rounded-md">
-        <AlertDialogHeader>
-          <AlertDialogTitle>Game Over</AlertDialogTitle>
-          <AlertDialogDescription className="hidden">
-            Game Over Screen
-          </AlertDialogDescription>
-        </AlertDialogHeader>
-        <Link to={"/"} className="w-full">
-          <Button className="w-full">
-            <Home /> | Go back home
+    <section id="end-game-menu" className="hidden" ref={ref}>
+      <div className="fixed top-0 left-0 w-screen h-screen"></div>
+      <h1 className="text-center fixed w-screen left-0 top-[16vh] text-foreground z-10">
+        Game Over
+      </h1>
+      <div className="flex w-full justify-evenly fixed bottom-[16vh] left-0 z-10">
+        <Link to={"/"} className="">
+          <Button size={"icon-xl"}>
+            <Home />
           </Button>
         </Link>
         <Button
-          className="w-full"
+          className="text-3xl"
+          size={"icon-xl"}
           onClick={() => {
             window.location.reload();
           }}
         >
-          <ResetIcon /> | Restart
+          <RedoIcon />
         </Button>
-      </AlertDialogContent>
-    </AlertDialog>
+      </div>
+    </section>
   );
 });
 

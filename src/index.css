@@ -4,26 +4,26 @@
 
 @layer base {
   :root {
-    --background: 0 0% 100%;
-    --foreground: 0 0% 3.9%;
+    --background: 29 100% 96%;
+    --foreground: 222 7% 27%;
 
-    --card: 0 0% 100%;
-    --card-foreground: 0 0% 3.9%;
+    --card: 42 90% 81%;
+    --card-foreground: 222 7% 27%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 0 0% 3.9%;
+    --popover-foreground: 222 7% 27%;
 
-    --primary: 0 0% 9%;
-    --primary-foreground: 0 0% 98%;
+    --primary: 24 81% 67%;
+    --primary-foreground: 29 100% 96%;
 
-    --secondary: 0 0% 96.1%;
-    --secondary-foreground: 0 0% 9%;
+    --secondary: 42 90% 81%;
+    --secondary-foreground: 222 7% 27%;
 
     --muted: 0 0% 96.1%;
     --muted-foreground: 0 0% 45.1%;
 
-    --accent: 0 0% 96.1%;
-    --accent-foreground: 0 0% 9%;
+    --accent: 42 95% 78%;
+    --accent-foreground: 222 7% 27%;
 
     --destructive: 0 84.2% 60.2%;
     --destructive-foreground: 0 0% 98%;
@@ -32,7 +32,7 @@
     --input: 0 0% 89.8%;
     --ring: 0 0% 3.9%;
 
-    --radius: 0.5rem;
+    --radius: 0.75rem;
   }
 
   .dark {
@@ -80,5 +80,34 @@
 
   .page {
     @apply w-full h-full flex flex-col prose dark:prose-invert;
+  }
+
+  .board-over {
+    @apply opacity-25;
+  }
+
+  @keyframes drop-in {
+    from {
+      scale: 1.1;
+    }
+  }
+
+  @keyframes drop-out {
+    from {
+      scale: 1;
+      background-color: hsl(var(--accent)) !important;
+    }
+    to {
+      scale: 0;
+      background-color: hsl(var(--accent)) !important;
+    }
+  }
+
+  .animate-drop-in {
+    animation: drop-in 0.25s;
+  }
+
+  .animate-drop-out {
+    animation: drop-out 0.5s;
   }
 }
